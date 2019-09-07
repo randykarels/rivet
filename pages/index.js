@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import Nav from '../components/nav'
 import Slideshow from '../components/slideshow'
+import Track from '../components/track'
 
 const images = [
   "/static/images/grow.jpg",
@@ -21,6 +22,8 @@ const Home = () => (
     </Head>
 
     <Slideshow images={images} width="100%" />
+
+    <Track />
 
     <div className='hero'>
       <h1 className='title'>Rivet</h1>
