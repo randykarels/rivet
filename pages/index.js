@@ -20,8 +20,7 @@ const Home = () => (
       <title>Home</title>
     </Head>
 
-    <Slideshow images={images} width="600">
-    </Slideshow>
+    <Slideshow images={images} width="100%" />
 
     <div className='hero'>
       <h1 className='title'>Rivet</h1>

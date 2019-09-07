@@ -17,18 +17,9 @@ class Img extends React.Component {
     }
 
     render = () => {
-        const activeStyle = {
-            opacity: 1,
-        };
-        const inactiveStyle = {
-            opacity: 0,
-        };
-        const imgStyle = this.props.isActive ? activeStyle : inactiveStyle;
 
         return (
             <div>
-                <img src={this.props.src}
-                     style={imgStyle} />
                 <style jsx>{`
                 div {
                     overflow: hidden;
@@ -36,6 +27,13 @@ class Img extends React.Component {
                     position: absolute;
                     top:0;
                     left: 0;
+                    height: 600px;
+                    background-color: black;
+                    background-image: url('${this.props.src}');
+                    background-position: center;
+                    background-size: cover;
+                    opacity: ${this.props.isActive ? 1 : 0};
+                    transition: opacity 0.5s ease-in-out;
                 }
                 div img {
                     width: 100%;

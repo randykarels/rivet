@@ -88,11 +88,13 @@ class Slideshow extends React.Component {
                 position: relative;
                 width:100%;
                 max-width:${this.props.width}px;
+                height: 600px;
+                background-color: black;
             };
-            div.images {
-                xwidth:${this.props.width}px;
-                border:1px solid orange;
-                position: relative;
+
+            div.controls {
+                position:absolute;
+                z-index: 100;
             }
         `}</style>
         </div>
