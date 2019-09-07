@@ -6,6 +6,7 @@ import Slideshow from '../components/slideshow'
 
 const images = [
   "/static/images/grow.jpg",
+  "https://res.cloudinary.com/rkrls/image/upload/c_scale,fl_progressive,w_1800/v1493344709/hollywood_vine.jpg",
   "https://d33wubrfki0l68.cloudfront.net/753e840ac575731f667d7497c931c731387034b3/2db56/gallery/alaska/images/alaska-img_4412.jpg",
   "https://d33wubrfki0l68.cloudfront.net/bb620a6e55edc73b65db2102e04ef3f38e2a20cf/9b16d/gallery/alaska/images/alaska-img_4444.jpg",
   "https://d33wubrfki0l68.cloudfront.net/fbcba3ebb7ec58ad71dbc68e4cc0c5cae8c8b78c/a0450/gallery/alaska/images/alaska-img_4644.jpg",
@@ -19,7 +20,7 @@ const Home = () => (
       <title>Home</title>
     </Head>
 
-    <Slideshow images={images} width="200">
+    <Slideshow images={images} width="600">
     </Slideshow>
 
     <div className='hero'>

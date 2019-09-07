@@ -16,18 +16,12 @@ class Img extends React.Component {
         checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
     }
 
-    handleLoad = () => {
-        //this.props.handleLoad(this.props.src);
-    }
-
     render = () => {
         const activeStyle = {
-            border: "2px solid yellow",
             opacity: 1,
         };
         const inactiveStyle = {
-            border: "2px solid transparent",
-            opacity: 0.25,
+            opacity: 0,
         };
         const imgStyle = this.props.isActive ? activeStyle : inactiveStyle;
 
@@ -39,6 +33,9 @@ class Img extends React.Component {
                 div {
                     overflow: hidden;
                     width: 100%;
+                    position: absolute;
+                    top:0;
+                    left: 0;
                 }
                 div img {
                     width: 100%;

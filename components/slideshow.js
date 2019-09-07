@@ -1,6 +1,7 @@
 import React from 'react'
 import Img from './img'
 import NextButton from './next-button'
+import Pickers from './pickers'
 
 class Slideshow extends React.Component {
     constructor(props) {
@@ -45,6 +46,10 @@ class Slideshow extends React.Component {
         this.setState({loaded: newLoaded});
     }
 
+    handlePickerClick = (newPosition) => {
+        this.setState({position: newPosition});
+    }
+
     renderImage = (src, i) => {
         // wait until after the first image is loaded before
         // loading the rest of the images
@@ -53,29 +58,42 @@ class Slideshow extends React.Component {
             return
         }
         const isActive = (i === this.state.position) ? true : false;
-        return <Img key={i} src={src} handleLoad={this.handleLoad} isActive={isActive} />;
+        return <Img key={i}
+                    src={src}
+                    handleLoad={this.handleLoad}
+                    isActive={isActive} />;
     }
 
     render = () => {
         const Next = (this.countLoaded() > 2) ? <NextButton handleClick={this.advance} /> : null;
         return (
-        <div className="slideshow">
+        <div className="slideshowContainer">
             <div className="controls">
                 {Next}
-                <div className="picker">
+                <Pickers images={this.props.images}
+                         loadedImages={this.state.loaded}
+                         handleClick={this.handlePickerClick}
+                         position={this.state.position} />
 
-                </div>
             </div>
-            {this.props.images.map((src, i) => this.renderImage(src, i))}
+
+            <div className="images">
+                {this.props.images.map((src, i) => this.renderImage(src, i))}
+            </div>
 
 
         <style jsx>{`
-            div.slideshow {
+            div.slideshowContainer {
                 border: 1px solid red;
                 position: relative;
                 width:100%;
                 max-width:${this.props.width}px;
             };
+            div.images {
+                xwidth:${this.props.width}px;
+                border:1px solid orange;
+                position: relative;
+            }
         `}</style>
         </div>
     )}
