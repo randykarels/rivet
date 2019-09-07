@@ -10,7 +10,7 @@ const checkImage = path => (
     })
 );
 
-class Img extends React.Component {
+class BackgroundImg extends React.Component {
 
     componentDidMount() {
         checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
@@ -37,6 +37,36 @@ class Img extends React.Component {
                 }
                 div img {
                     width: 100%;
+                }
+            `}</style>
+            </div>
+    )}
+}
+
+
+class Img extends React.Component {
+
+    componentDidMount() {
+        checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
+    }
+
+    render = () => {
+        return (
+            <div>
+                <img src={this.props.src} />
+                <style jsx>{`
+                div {
+                    overflow: hidden;
+                    width: 100%;
+                    position: absolute;
+                    top:0;
+                    left: 0;
+                    height: 600px;
+                }
+                div img {
+                    width: 100%;
+                    opacity: ${this.props.isActive ? 1 : 0};
+                    transition: opacity 0.1s ease-out;
                 }
             `}</style>
             </div>
