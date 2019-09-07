@@ -24,13 +24,6 @@ const Home = () => (
 
     <div className='hero'>
       <h1 className='title'>Rivet</h1>
-
-        <Link href='https://github.com/zeit/next.js#setup'>
-          <a className='card'>
-            <h3>Getting Started &rarr;</h3>
-            <p>Learn more about Next.js on GitHub and in their examples.</p>
-          </a>
-        </Link>
     </div>
 
     <style jsx>{`

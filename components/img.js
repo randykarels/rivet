@@ -1,40 +1,48 @@
 import React from 'react'
 
+// create an utility function somewhere
+const checkImage = path => (
+    new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve(path);
+        img.onerror = () => reject();
+        img.src = path;
+    })
+);
 
 class Img extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          isPreLoaded: false,
-        };
-        this.onload = this.onload.bind(this);
-    }
 
     componentDidMount() {
-        const img = new Image();
-        img.onload = this.onload;
-        img.src = this.props.src;
+        console.log(`componentDidMount: ${this.props.src}`);
+        checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
     }
 
-    onload = function(){
-        this.setState({isPreLoaded: true});
-        console.log(`loaded! ${this.props.src}`);
+    handleLoad = () => {
+        //this.props.handleLoad(this.props.src);
     }
 
     render = () => {
-        const imgStyle = {
-            border: "1px solid yellow",
-            width: "100%"
-        }
-        const img = <img src={this.props.src} style={imgStyle} />;
+        const activeStyle = {
+            border: "2px solid yellow",
+            opacity: 1,
+        };
+        const inactiveStyle = {
+            border: "2px solid transparent",
+            opacity: 0.25,
+        };
+        const imgStyle = this.props.isActive ? activeStyle : inactiveStyle;
+
         return (
             <div>
-                {this.state.isPreLoaded ? img : <p>loading</p>}
+                <img src={this.props.src}
+                     style={imgStyle} />
                 <style jsx>{`
-                div.img {
-                    border: 1px solid green;
-                    width: 100%;
+                div {
                     overflow: hidden;
+                    width: 100%;
+                }
+                div img {
+                    width: 100%;
                 }
             `}</style>
             </div>
