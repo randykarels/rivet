@@ -1,5 +1,6 @@
 import React from 'react'
 import Img from './img'
+import NextButton from './next-button'
 
 class Slideshow extends React.Component {
     constructor(props) {
@@ -12,16 +13,31 @@ class Slideshow extends React.Component {
     }
 
     advance = () => {
+        const nextPosition = this.findNextLoadedPosition(this.state.position);
+        this.setState({position: nextPosition});
+    }
+
+    findNextLoadedPosition = (i) => {
         let nextPosition;
-        if (this.state.position == this.props.images.length - 1) {
+        if (i >= this.props.images.length - 1) {
             // last image. loop to start
             nextPosition = 0;
         } else {
             // advance to next
-            nextPosition = this.state.position + 1;
+            nextPosition = i + 1;
         }
-        this.setState({position: nextPosition});
+
+        // if the nextimage isn't loaded, then keep advancing until we
+        // reach a loaded image.
+        if (this.state.loaded[this.props.images[nextPosition]]) {
+            return nextPosition;
+        } else {
+            return this.findNextLoadedPosition(i + 1);
+        }
     }
+
+    countLoaded = () => Object.keys(this.state.loaded).length;
+
     handleLoad = (src) => {
         console.log(`loaded: ${src}`);
         const newLoaded = this.state.loaded;
@@ -40,10 +56,12 @@ class Slideshow extends React.Component {
         return <Img key={i} src={src} handleLoad={this.handleLoad} isActive={isActive} />;
     }
 
-    render = () => (
+    render = () => {
+        const Next = (this.countLoaded() > 2) ? <NextButton handleClick={this.advance} /> : null;
+        return (
         <div className="slideshow">
             <div className="controls">
-                <button onClick={this.advance}>next</button>
+                {Next}
                 <div className="picker">
 
                 </div>
@@ -60,7 +78,7 @@ class Slideshow extends React.Component {
             };
         `}</style>
         </div>
-    )
+    )}
 }
 
 export default Slideshow;

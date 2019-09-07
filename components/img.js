@@ -13,7 +13,6 @@ const checkImage = path => (
 class Img extends React.Component {
 
     componentDidMount() {
-        console.log(`componentDidMount: ${this.props.src}`);
         checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
     }
 
