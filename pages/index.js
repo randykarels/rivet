@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import Nav from '../components/nav'
 import Slideshow from '../components/slideshow'
+import Playlist from '../components/track'
 
 const images = [
   "/static/images/grow.jpg",
@@ -14,6 +15,12 @@ const images = [
   "https://d33wubrfki0l68.cloudfront.net/e14bb11d3f82a76e5cac562c1e83c57165d792aa/a4d9d/gallery/alaska/images/alaska-img_5092.jpg",
 ];
 
+const tracks = [
+  {name: "track one", src: "/static/music/one.mp3"},
+  {name: "track two", src: "/static/music/two.mp3"},
+  {name: "track three", src: "/static/music/three.mp3"},
+]
+
 const Home = () => (
   <div>
     <Head>
@@ -22,56 +29,10 @@ const Home = () => (
 
     <Slideshow images={images} width="100%" />
 
-    <div className='hero'>
-      <h1 className='title'>Rivet</h1>
-    </div>
+    <Playlist tracks={tracks} />
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .hero h1 {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 36px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
+    <h1 className='title'>Rivet</h1>
+
   </div>
 )
 
