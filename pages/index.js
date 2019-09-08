@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Head from 'next/head'
 import Nav from '../components/nav'
 import Slideshow from '../components/slideshow'
-import Playlist from '../components/track'
+import Playlist from '../components/playlist'
 
 const images = [
   "/static/images/grow.jpg",

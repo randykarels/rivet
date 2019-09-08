@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 
 class Track extends React.Component {
-
+    
     componentDidMount = (props) => {
         this.audio = new Audio;
         this.audio.setAttribute('preload', true);
@@ -68,48 +68,74 @@ class Track extends React.Component {
 }
 
 
-class Playlist extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentlyPlaying: null,
+// Note: this is currently not working
+function TrackAsFunction ({src, name, handleEnded, handlePlay, handlePause, isPlaying}){
+    let audio = null;
+
+    useEffect(() => {
+        console.log(`useEffect for setup with ${src}`)
+        if (!src)
+            return
+
+        audio = new Audio;
+        audio.setAttribute('preload', true);
+        audio.setAttribute('src', src);
+        audio.addEventListener('ended', ()=>handleEnded(src));
+        audio.addEventListener('timeupdate', onTimeUpdate);
+    }, [src]); 
+
+    useEffect(() => {
+        console.log(`useEffect for play/pause with ${audio} ${isPlaying}`)
+        if (!audio)
+            return
+
+        if (isPlaying) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    }, [isPlaying]);
+
+    const onTimeUpdate = () => {
+        //sets the percentage
+        const progress = ((audio.currentTime / audio.duration) * 100);
+        console.log(`${progress}% done`);
+    }
+
+    const handleClick = () => {
+        if (isPlaying) {
+            handlePause(src);
+        } else {
+            handlePlay(src);
         }
     }
 
-    handlePlay = (src) => {
-        this.setState({currentlyPlaying: src});
-    }
 
-    handlePause = (src) => {
-        if (src == this.state.currentlyPlaying) {
-            this.setState({currentlyPlaying: null});
-        }
-    }
+    let borderColor = "transparent";
 
-    handleEnded = (src) => {
-        if (src == this.state.currentlyPlaying) {
-            this.setState({currentlyPlaying: null});
-        }
+    if (isPlaying) {
+        borderColor = "orange";
     }
-
-    renderTrack = (track, i) => {
-        const isPlaying = track.src == this.state.currentlyPlaying;
-        return <Track key={i}
-                      name={track.name}
-                      src={track.src}
-                      isPlaying={isPlaying} 
-                      handlePlay={this.handlePlay} 
-                      handlePause={this.handlePause}
-                      handleEnded={this.handleEnded} />
-    }
-
-    render = () => {
-        return (
-            <div>
-                {this.props.tracks.map((track, i) => this.renderTrack(track, i))}
-            </div>
-
-        );
-    }
+    return (
+        <div onClick={handleClick}>
+            {name} {isPlaying ? "pause" : "play"}
+            <style jsx>{`
+                div {
+                    padding: 1em;
+                    font-family: Helvetica, san-serif;
+                    background-color: ${isPlaying ? "orange" : "transparent"};
+                    border: 1px solid transparent;
+                    border-color: ${borderColor};
+                    color: 1px solid #777;
+                }
+                div:hover {
+                    cursor: pointer;
+                }
+                `}</style>
+        </div>
+        )
 }
-export default Playlist;
+
+
+
+export default Track;
