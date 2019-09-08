@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 // create an utility function somewhere
 const checkImage = path => (
@@ -44,33 +44,32 @@ class BackgroundImg extends React.Component {
 }
 
 
-class Img extends React.Component {
+function Img({src, handleLoad, isActive}) {
 
-    componentDidMount() {
-        checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
-    }
+    useEffect(()=>{
+        checkImage(src).then( () => handleLoad(src));
+    }, [src]);
 
-    render = () => {
-        return (
-            <div>
-                <img src={this.props.src} />
-                <style jsx>{`
-                div {
-                    overflow: hidden;
-                    width: 100%;
-                    position: absolute;
-                    top:0;
-                    left: 0;
-                    height: 600px;
-                }
-                div img {
-                    width: 100%;
-                    opacity: ${this.props.isActive ? 1 : 0};
-                    transition: opacity 0.1s ease-out;
-                }
-            `}</style>
-            </div>
-    )}
+    return (
+        <div>
+            <img src={src} />
+            <style jsx>{`
+            div {
+                overflow: hidden;
+                width: 100%;
+                position: absolute;
+                top:0;
+                left: 0;
+                height: 600px;
+            }
+            div img {
+                width: 100%;
+                opacity: ${isActive ? 1 : 0};
+                transition: opacity 0.1s ease-out;
+            }
+        `}</style>
+        </div>
+)
 }
 
 export default Img
