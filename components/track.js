@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 
 
 const Track = ({name, src, isPlaying, handlePlay, handlePause, handleEnded}) => {
-    
+
     const audioEl = useRef(null);
 
     useEffect(()=>{

@@ -1,15 +1,5 @@
 import React, { useEffect } from 'react'
 
-// create an utility function somewhere
-const checkImage = path => (
-    new Promise(resolve => {
-        const img = new Image();
-        img.onload = () => resolve(path);
-        img.onerror = () => reject();
-        img.src = path;
-    })
-);
-
 class BackgroundImg extends React.Component {
 
     componentDidMount() {
@@ -44,32 +34,25 @@ class BackgroundImg extends React.Component {
 }
 
 
-function Img({src, handleLoad, isActive}) {
-
-    useEffect(()=>{
-        checkImage(src).then( () => handleLoad(src));
-    }, [src]);
-
-    return (
-        <div>
-            <img src={src} />
-            <style jsx>{`
-            div {
-                overflow: hidden;
-                width: 100%;
-                position: absolute;
-                top:0;
-                left: 0;
-                height: 600px;
-            }
-            div img {
-                width: 100%;
-                opacity: ${isActive ? 1 : 0};
-                transition: opacity 0.1s ease-out;
-            }
-        `}</style>
-        </div>
+const Img = ({src, isActive}) => (
+    <div>
+        <img src={src} />
+        <style jsx>{`
+        div {
+            overflow: hidden;
+            width: 100%;
+            position: absolute;
+            top:0;
+            left: 0;
+            height: 600px;
+        }
+        div img {
+            width: 100%;
+            opacity: ${isActive ? 1 : 0};
+            transition: opacity 0.1s ease-out;
+        }
+    `}</style>
+    </div>
 )
-}
 
 export default Img

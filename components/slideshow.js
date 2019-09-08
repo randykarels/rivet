@@ -1,26 +1,49 @@
-import React from 'react'
+import React, {useState, useEffect, useRef, useReducer} from 'react'
 import Img from './img'
 import NextButton from './next-button'
 import Pickers from './pickers'
 
-class Slideshow extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loaded: {},
-            position: 0,
-        };
-        this.handleLoad = this.handleLoad.bind(this);
-    }
 
-    advance = () => {
-        const nextPosition = this.findNextLoadedPosition(this.state.position);
-        this.setState({position: nextPosition});
-    }
+// Returns copy of *imgs* with `src` added
+const reducer = (imgs, src) => {
+    const newImgs = {...imgs};
+    newImgs[src] = true;
+    return newImgs;
+};
 
-    findNextLoadedPosition = (i) => {
+// custom hook returning current state of loaded images.
+// loadedImages is an object in the form:
+// {
+//     src_1: true,
+//     src_2: true,
+// }
+// where src_1 and src_2 are the urls of the preloaded images.
+function usePreloadedImages (images) {
+    // TODO: preload the first image first, then all other others
+    const [loadedImages, dispatch] = useReducer(reducer, {})
+    useEffect(()=>{
+        images.map( (src) => {
+            const img = new Image();
+            img.onload = () => dispatch(src);
+            img.src = src;
+        });
+    }, [images]);
+
+    return loadedImages;
+}
+
+const Slideshow = ({images, width}) => {
+    const [position, setPosition] = useState(0);
+    const loadedImages = usePreloadedImages(images);
+
+    const advance = () => {
+        setPosition(findNextLoadedPosition(position));
+    };
+
+    // returns the position of the next loaded image
+    function findNextLoadedPosition(i) {
         let nextPosition;
-        if (i >= this.props.images.length - 1) {
+        if (i >= images.length - 1) {
             // last image. loop to start
             nextPosition = 0;
         } else {
@@ -30,75 +53,59 @@ class Slideshow extends React.Component {
 
         // if the nextimage isn't loaded, then keep advancing until we
         // reach a loaded image.
-        if (this.state.loaded[this.props.images[nextPosition]]) {
+        const nextSrc = images[nextPosition];
+        if (loadedImages[nextSrc]) {
             return nextPosition;
         } else {
-            return this.findNextLoadedPosition(i + 1);
+            return findNextLoadedPosition(i + 1);
         }
     }
 
-    countLoaded = () => Object.keys(this.state.loaded).length;
+    const handlePickerClick = (newPosition) =>{
+        setPosition(newPosition);
+    };
 
-    handleLoad = (src) => {
-        console.log(`loaded: ${src}`);
-        const newLoaded = this.state.loaded;
-        newLoaded[src] = true;
-        this.setState({loaded: newLoaded});
-    }
-
-    handlePickerClick = (newPosition) => {
-        this.setState({position: newPosition});
-    }
-
-    renderImage = (src, i) => {
-        // wait until after the first image is loaded before
-        // loading the rest of the images
-        const isFirstImageLoaded = this.state.loaded[this.props.images[0]];
-        if (i > 0 && !isFirstImageLoaded) {
-            return
-        }
-        const isActive = (i === this.state.position) ? true : false;
+    const renderImage = (src, i) => {
         return <Img key={i}
                     src={src}
-                    handleLoad={this.handleLoad}
-                    isActive={isActive} />;
-    }
+                    isActive={(i === position) ? true : false}
+                    />;
+    };
 
-    render = () => {
-        const Next = (this.countLoaded() > 2) ? <NextButton handleClick={this.advance} /> : null;
-        return (
+    const countLoaded = Object.keys(loadedImages).length;
+    const Next = (countLoaded > 2) ? <NextButton handleClick={advance} /> : null;
+    
+    return (
         <div className="slideshowContainer">
             <div className="controls">
                 {Next}
-                <Pickers images={this.props.images}
-                         loadedImages={this.state.loaded}
-                         handleClick={this.handlePickerClick}
-                         position={this.state.position} />
-
+                <Pickers images={images}
+                         loadedImages={loadedImages}
+                         handleClick={handlePickerClick}
+                         position={position} />
             </div>
 
             <div className="images">
-                {this.props.images.map((src, i) => this.renderImage(src, i))}
+                {images.map((src, i) => renderImage(src, i))}
             </div>
 
+            <style jsx>{`
+                div.slideshowContainer {
+                    border: 1px solid red;
+                    position: relative;
+                    width:100%;
+                    max-width:${width};
+                    height: 600px;
+                    background-color: transparent;
+                };
 
-        <style jsx>{`
-            div.slideshowContainer {
-                border: 1px solid red;
-                position: relative;
-                width:100%;
-                max-width:${this.props.width}px;
-                height: 600px;
-                background-color: black;
-            };
-
-            div.controls {
-                position:absolute;
-                z-index: 100;
-            }
-        `}</style>
+                div.controls {
+                    position:absolute;
+                    z-index: 100;
+                }
+            `}</style>
         </div>
-    )}
+    )
 }
 
 export default Slideshow;

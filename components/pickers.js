@@ -1,5 +1,4 @@
 import React from 'react'
-import { generateKeyPair } from 'crypto';
 
 const Picker = ({handleClick, isLoaded, isActive}) => {
     let css;
@@ -38,7 +37,8 @@ const Picker = ({handleClick, isLoaded, isActive}) => {
 
 const Pickers = ({images, loadedImages, handleClick, position}) => (
     <div>
-    {images.map((src, i) => <Picker src={src}
+    {images.map((src, i) => <Picker key={i}
+                                    src={src}
                                     isLoaded={loadedImages[src]}
                                     isActive={i == position}
                                     handleClick={()=>handleClick(i)}/>)}
