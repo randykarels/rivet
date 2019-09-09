@@ -1,141 +1,54 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 
-class Track extends React.Component {
+const Track = ({name, src, isPlaying, handlePlay, handlePause, handleEnded}) => {
     
-    componentDidMount = (props) => {
-        this.audio = new Audio;
-        this.audio.setAttribute('preload', true);
-        this.audio.setAttribute('src', this.props.src);
-        this.audio.addEventListener('ended', this.handleEnded);
-        this.audio.addEventListener('timeupdate', this.onTimeUpdate);
-    }
+    const audioEl = useRef(null);
 
-    componentDidUpdate = (prevProps) => {
-        if (this.props.isPlaying) {
-            this.audio.play();
-        } else {
-            this.audio.pause();
-        }
-    }
-
-    onTimeUpdate = () => {
-        //sets the percentage
-        const progress = ((this.audio.currentTime / this.audio.duration) * 100);
-        console.log(`${progress}% done`);
-    }
-
-    handleClick = () => {
-        if (this.props.isPlaying) {
-            this.props.handlePause(this.props.src);
-        } else {
-            this.props.handlePlay(this.props.src);
-        }
-    }
-
-    handleEnded = () => {
-        this.props.handleEnded(this.props.src);
-    }
-
-    render = () => {
-        let txt = "play";
-        let borderColor = "transparent";
-        let backgroundColor = "transparent";
-        if (this.props.isPlaying) {
-            txt = "pause";
-            borderColor = "orange";
-            backgroundColor = "orange";
-        }
-        return (
-        <div onClick={this.handleClick}>
-            {this.props.name} {txt}
-            <style jsx>{`
-                div {
-                    padding: 1em;
-                    font-family: Helvetica, san-serif;
-                    background-color: ${backgroundColor};
-                    border: 1px solid transparent;
-                    border-color: ${borderColor};
-                    color: 1px solid #777;
-                }
-                div:hover {
-                    cursor: pointer;
-                }
-                `}</style>
-        </div>
-        )
-    }
-}
-
-
-// Note: this is currently not working
-function TrackAsFunction ({src, name, handleEnded, handlePlay, handlePause, isPlaying}){
-    let audio = null;
-
-    useEffect(() => {
-        console.log(`useEffect for setup with ${src}`)
-        if (!src)
-            return
-
-        audio = new Audio;
-        audio.setAttribute('preload', true);
-        audio.setAttribute('src', src);
-        audio.addEventListener('ended', ()=>handleEnded(src));
-        audio.addEventListener('timeupdate', onTimeUpdate);
-    }, [src]); 
-
-    useEffect(() => {
-        console.log(`useEffect for play/pause with ${audio} ${isPlaying}`)
-        if (!audio)
-            return
-
+    useEffect(()=>{
         if (isPlaying) {
-            audio.play();
+            audioEl.current.play();
         } else {
-            audio.pause();
+            audioEl.current.pause();
         }
     }, [isPlaying]);
 
-    const onTimeUpdate = () => {
-        //sets the percentage
-        const progress = ((audio.currentTime / audio.duration) * 100);
+    const handleTimeUpdate = () => {
+        //logs the percentage played
+        const progress = ((audioEl.current.currentTime / audioEl.current.duration) * 100);
         console.log(`${progress}% done`);
     }
 
-    const handleClick = () => {
-        if (isPlaying) {
-            handlePause(src);
-        } else {
-            handlePlay(src);
-        }
-    }
-
-
-    let borderColor = "transparent";
-
-    if (isPlaying) {
-        borderColor = "orange";
-    }
+    const txt = isPlaying ? "pause" : "play";
+    const klass = isPlaying ? "playing" : "paused";
+    const handleClick = isPlaying ? handlePause : handlePlay;
     return (
-        <div onClick={handleClick}>
-            {name} {isPlaying ? "pause" : "play"}
-            <style jsx>{`
-                div {
-                    padding: 1em;
-                    font-family: Helvetica, san-serif;
-                    background-color: ${isPlaying ? "orange" : "transparent"};
-                    border: 1px solid transparent;
-                    border-color: ${borderColor};
-                    color: 1px solid #777;
-                }
-                div:hover {
-                    cursor: pointer;
-                }
-                `}</style>
-        </div>
-        )
+    <div className={klass} onClick={() => handleClick(src)}>
+        {name} {txt}
+        <audio ref={audioEl}
+               preload={true}
+               src={src} 
+               onEnded={()=>handleEnded(src)}
+               onTimeUpdate={handleTimeUpdate}
+               ></audio>
+        <style jsx>{`
+            div {
+                padding: 1em;
+                font-family: Helvetica, san-serif;
+                background-color: transparent;
+                border: 1px solid transparent;
+                color: 1px solid #777;
+            }
+            div.playing {
+                border-color: orange;
+                background-color: orange;
+            }
+            div:hover {
+                cursor: pointer;
+            }
+            `}</style>
+    </div>
+    )
 }
-
-
 
 export default Track;
