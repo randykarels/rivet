@@ -1,38 +1,27 @@
-import React, { useEffect } from 'react'
+import React  from 'react'
 
-class BackgroundImg extends React.Component {
-
-    componentDidMount() {
-        checkImage(this.props.src).then( () => this.props.handleLoad(this.props.src));
-    }
-
-    render = () => {
-
-        return (
-            <div>
-                <style jsx>{`
-                div {
-                    overflow: hidden;
-                    width: 100%;
-                    position: absolute;
-                    top:0;
-                    left: 0;
-                    height: 600px;
-                    background-color: black;
-                    background-image: url('${this.props.src}');
-                    background-position: center;
-                    background-size: cover;
-                    opacity: ${this.props.isActive ? 1 : 0};
-                    transition: opacity 0.5s ease-in-out;
-                }
-                div img {
-                    width: 100%;
-                }
-            `}</style>
-            </div>
-    )}
-}
-
+const BackgroundImg = ({src, isActive}) => (
+    // TODO explore keyframes for fading animation?
+    <div>
+        <style jsx>{`
+        div {
+            width: 100%;
+            position: absolute;
+            display: table-cell;
+            top:0;
+            left: 0;
+            height: 600px;
+            background-color: transparent;
+            background-image: url('${src}');
+            background-position: center;
+            background-size: cover;
+            opacity: ${isActive ? 1 : 0};
+            transition: opacity 0.5s ease-in-out;
+            transition: background-image 0.5s ease-in-out;
+        }
+    `}</style>
+    </div>
+)
 
 const Img = ({src, isActive}) => (
     <div>
@@ -55,4 +44,4 @@ const Img = ({src, isActive}) => (
     </div>
 )
 
-export default Img
+export default BackgroundImg
