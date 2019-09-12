@@ -1,7 +1,9 @@
 import React  from 'react'
 
-const BackgroundImg = ({src, isActive}) => (
+const BackgroundImg = ({src}) => (
     // TODO explore keyframes for fading animation?
+    // FF has no transitions.
+    // Safari flashes when moving to start of slideshow
     <div>
         <style jsx>{`
         div {
@@ -15,9 +17,7 @@ const BackgroundImg = ({src, isActive}) => (
             background-image: url('${src}');
             background-position: center;
             background-size: cover;
-            opacity: ${isActive ? 1 : 0};
-            transition: opacity 0.5s ease-in-out;
-            transition: background-image 0.5s ease-in-out;
+            transition: background-image 0.5s ease-out;
         }
     `}</style>
     </div>
@@ -44,4 +44,4 @@ const Img = ({src, isActive}) => (
     </div>
 )
 
-export default BackgroundImg
+export {BackgroundImg, Img}

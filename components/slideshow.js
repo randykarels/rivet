@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useRef, useReducer} from 'react'
-import Img from './img'
-import NextButton from './next-button'
-import Pickers from './pickers'
-
+import {Img, BackgroundImg} from './img'
+import SlideshowControls from './slideshowControls'
 
 // Returns copy of *imgs* with `src` added
 const reducer = (imgs, src) => {
@@ -36,10 +34,6 @@ const Slideshow = ({images, width}) => {
     const [position, setPosition] = useState(0);
     const loadedImages = usePreloadedImages(images);
 
-    const advance = () => {
-        setPosition(findNextLoadedPosition(position));
-    };
-
     // returns the position of the next loaded image
     function findNextLoadedPosition(i) {
         let nextPosition;
@@ -61,9 +55,8 @@ const Slideshow = ({images, width}) => {
         }
     }
 
-    const handlePickerClick = (newPosition) =>{
-        setPosition(newPosition);
-    };
+    const handlePickerClick = (newPosition) => setPosition(newPosition);
+    const handleNextClick = () => setPosition(findNextLoadedPosition(position));
 
     const renderImage = (src, i) => {
         return <Img key={i}
@@ -71,22 +64,18 @@ const Slideshow = ({images, width}) => {
                     isActive={(i === position) ? true : false}
                     />;
     };
-
-    const countLoaded = Object.keys(loadedImages).length;
-    const Next = (countLoaded > 2) ? <NextButton handleClick={advance} /> : null;
     
     return (
         <div className="slideshowContainer">
-            <div className="controls">
-                {Next}
-                <Pickers images={images}
-                         loadedImages={loadedImages}
-                         handleClick={handlePickerClick}
-                         position={position} />
-            </div>
-
+            <SlideshowControls images={images}
+                               loadedImages={loadedImages}
+                               handleNextClick={handleNextClick}
+                               handlePickerClick={handlePickerClick}
+                               position={position} />
+            
             <div className="images">
-                {images.map((src, i) => renderImage(src, i))}
+                {/* {images.map((src, i) => renderImage(src, i))} */}
+                <BackgroundImg src={images[position]} />
             </div>
 
             <style jsx>{`
@@ -98,11 +87,6 @@ const Slideshow = ({images, width}) => {
                     height: 600px;
                     background-color: transparent;
                 };
-
-                div.controls {
-                    position:absolute;
-                    z-index: 100;
-                }
             `}</style>
         </div>
     )
