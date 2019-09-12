@@ -59,7 +59,7 @@ const Slideshow = ({images, width}) => {
     const handleNextClick = () => setPosition(findNextLoadedPosition(position));
 
     const renderImage = (src, i) => {
-        return <Img key={i}
+        return <BackgroundImg key={i}
                     src={src}
                     isActive={(i === position) ? true : false}
                     />;
@@ -74,8 +74,7 @@ const Slideshow = ({images, width}) => {
                                position={position} />
             
             <div className="images">
-                {/* {images.map((src, i) => renderImage(src, i))} */}
-                <BackgroundImg src={images[position]} />
+                {images.map((src, i) => renderImage(src, i))}
             </div>
 
             <style jsx>{`

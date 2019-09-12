@@ -1,6 +1,6 @@
 import React  from 'react'
 
-const BackgroundImg = ({src}) => (
+const BackgroundImg = ({src, isActive}) => (
     // TODO explore keyframes for fading animation?
     // FF has no transitions.
     // Safari flashes when moving to start of slideshow
@@ -12,13 +12,14 @@ const BackgroundImg = ({src}) => (
             display: table-cell;
             top:0;
             left: 0;
-            height: 600px;
-            background-color: transparent;
+            height: 100%;
+            background-color: #999;
             background-image: url('${src}');
             background-position: center;
             background-size: cover;
-            transition: background-image 0.5s ease-out;
-        }
+            opacity: ${isActive ? 1 : 0};
+            transition: opacity 0.25s linear 0.1s; 
+            // note: transition delay fixes flash on ff
     `}</style>
     </div>
 )
